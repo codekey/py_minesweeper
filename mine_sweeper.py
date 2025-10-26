@@ -1,4 +1,4 @@
-import os
+import os, sys
 import random
 import time
 
@@ -91,13 +91,22 @@ def won():
 
 def main():
     l, w, num_mines = 3, 3, 1
+    if len(sys.argv) >= 3:
+        l = int(sys.argv[1].strip())
+        w = int(sys.argv[2].strip())
+        num_mines = int(sys.argv[3].strip())
     area = l * w
     minescape = lay_mines(l, w, num_mines)
-    # print(minescape)
+
     while True:
         draw_minefield(l, w)
         print("\n")
-        ch = input(f"Enter 1 - {l*w} for cell with no mine (q for exit): ")
+        if (len(exposed) + len(flags)) >= area: # if all cells are taken, check if player won!
+            if won():
+                return
+        print(f"* Enter 1 - {l*w} for exposing a cell with no mine (Count for top-left)")
+        print(f"* Enter Negative number for flagging a cell with mine")
+        ch = input("* Enter 'q' for exit: ")
         if ch == 'q':
             break
         elif ch == "ch":
@@ -114,9 +123,6 @@ def main():
         else:
             expose_mine(r, c)
 
-        if (len(exposed) + len(flags)) >= area: # if all cells are taken, check if player won!
-            if won():
-                return
 
 if __name__ == "__main__":
     main()
