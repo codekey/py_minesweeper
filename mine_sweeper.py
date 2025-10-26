@@ -3,7 +3,7 @@ import random
 import time
 
 # GLOBAL VARIABLES
-minescape, exposed, flags = [], [], []
+minescape, exposed, flags = set(), set(), set()
 num_selections = 0
 
 
@@ -16,9 +16,9 @@ def lay_mines(l, w, m):
         else:
             taken.append(rnd)
             r, c = rnd // w, rnd % w
-            minescape.append((r, c))
+            minescape.add((r, c))
         i += 1
-    minescape.sort()
+    #minescape.sort()
 
 
 def count_neighbor_mines(i, j):
@@ -33,8 +33,15 @@ def count_neighbor_mines(i, j):
                 count += 1
     return str(count) if count > 0 else " X "
 
-def flag_mine(i, j):
-    flags.append((i,j))
+def expose_mine(r, c):
+    exposed.add((r, c))
+    if (r, c) in flags:
+        flags.remove((r, c))
+
+def flag_mine(r, c):
+    flags.add((r, c))
+    if (r, c) in exposed:
+        exposed.remove((r, c))
 
 def draw_minefield(l, w, final=False, cheat=False):
     os.system('clear')
@@ -45,15 +52,14 @@ def draw_minefield(l, w, final=False, cheat=False):
             print("|", end="")
             if True in (final, cheat) and (i, j) in minescape:
                 print("💣 ", end="")
+            elif (i, j) in flags:
+                print(f" 🚩", end="")
             elif (i, j) in exposed:
                 print(f"{count_neighbor_mines(i,j):^3s}", end="")
             else:
                 print("   ", end="")
         print("|")
         print("+---" * w + "+")
-    # print(minescape)
-    # print(exposed)
-
 
 def boom(r, c):
     if (r, c) in minescape:
@@ -61,12 +67,31 @@ def boom(r, c):
     else:
         return False
 
-def validate():
-    pass
+def calculate(ch, l, w):
+    flg = False
+    try:
+        ch = int(ch)
+        if ch < 0:      # if User chose to Flag and not Expose
+            flg = True
+            ch = abs(ch)
+        ch = ch - 1
+        r, c = ch // w, ch % w # Converting to Array index as user enters 1 to n
+    except (TypeError, ValueError):
+        r = c = -1
+        print(f"Enter either a number 1 - {l*w} OR q for exit.")
+        time.sleep(3)
+    return r, c, flg 
 
+def won():
+    if flags == minescape:
+        print(f"Amazing! You won the game!!\n\n") 
+        return True
+    else:
+        return False 
 
 def main():
-    l, w, num_mines = 5, 5, 1
+    l, w, num_mines = 3, 3, 1
+    area = l * w
     minescape = lay_mines(l, w, num_mines)
     # print(minescape)
     while True:
@@ -79,22 +104,19 @@ def main():
             draw_minefield(l, w, cheat=True)
             time.sleep(3)
             continue
-
-        try:
-            ch = int(ch) - 1 	
-            # Converting to Array index as user enters 1 to n
-            r, c = ch // w, ch % w
-        except ValueError:
-            print(f"Enter either a number 1 - {l*w} OR q for exit.")
-            time.sleep(3)
-            continue
-        if boom(r, c):
+        r, c, flg = calculate(ch, l, w)
+        if flg:
+              flag_mine(r, c)
+        elif boom(r, c):
             draw_minefield(l, w, final=True)
             print("🔥 BLAAST..!!!! 🔥\n\n")
             break
         else:
-            exposed.append((r, c))
+            expose_mine(r, c)
 
+        if (len(exposed) + len(flags)) >= area: # if all cells are taken, check if player won!
+            if won():
+                return
 
 if __name__ == "__main__":
     main()
