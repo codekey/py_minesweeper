@@ -7,6 +7,9 @@ her high-school friends, and other aspiring Python learners.
 1. Download `mine_sweeper.py` script
 2. Make sure you have Python3 installed
 3. Execute `pip install colorama`
-3. Execute the script `python3 py_mine-sweeper.py`
-4. Follow the instructions on screen. Enjoy & share!
+4. Execute the script as
+   a. `python3 py_mine-sweeper.py` if you want to use default configs  OR
+   b. `python3 py_mine-sweeper.py num_rows num_cols num_mines` if you want to configure the rows, columns and number of mines
+      i. Example `python3 py_mine-sweeper.py 5 4 7`
+6. Follow the instructions on screen. Enjoy & share!
    
