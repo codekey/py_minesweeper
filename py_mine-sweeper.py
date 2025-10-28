@@ -6,8 +6,17 @@ her high-school friends, and other aspiring Python learners.
 
 import os, sys
 import random, time
-from colorama import Fore, Back, Style
-
+try:
+    from colorama import Fore, Style
+except (ImportError, ModuleNotFoundError):
+    class Fore: 
+        RED = "\x1b[31m"
+        GREEN = "\x1b[32m"
+        YELLOW = "\x1b[33m"
+        BLUE = "\x1b[34m"
+    class Style:
+        BRIGHT = "\x1b[1m"
+        RESET_ALL = "\x1b[0m"
 
 # GLOBAL VARIABLES: 
 # Configurable ASCII for graphic's
