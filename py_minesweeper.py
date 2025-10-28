@@ -29,13 +29,13 @@ minescape, exposed, flags = set(), set(), set()
 
 def lay_mines(l, w, m):
 # Generates random mines and assigns locations
-    i, taken = 0, []
+    i, taken = 0, set()
     while i < m:
         rnd = random.randint(1, l*w)
         if rnd in taken:
             continue
         else:
-            taken.append(rnd)
+            taken.add(rnd)
             r, c = rnd // w, rnd % w
             minescape.add((r, c))
         i += 1
@@ -131,7 +131,8 @@ def main():
         print("\n")
         if (len(exposed) + len(flags)) >= area: # if all cells are taken, check if player has won!
             if won():
-                print(f"Amazing! You won the game!!\n\n") 
+                print(Fore.GREEN + Style.BRIGHT + 
+                f"Amazing! You've won the game!!\n\n" + Style.RESET_ALL) 
                 break
 
         print(Fore.RED + Style.BRIGHT + \
@@ -153,7 +154,8 @@ def main():
         elif boom(r, c):
             draw_minefield(l, w, final=True)
             print("\n\n" + f"{chr(fire)}"*2 + Fore.YELLOW + Style.BRIGHT + \
-            " BLAAST..!!!! " + Style.RESET_ALL + f"{chr(fire)}"*2 + "\n\n")
+            " BLAAST..!!!!" + Style.RESET_ALL + f"{chr(fire)}"*2 + 
+            Style.BRIGHT + "   Game Over!  " + Style.RESET_ALL + "\n\n")
             break
         else:
             step_on(r, c)
