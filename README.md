@@ -1,4 +1,4 @@
-# Py Mine Sweeper
+# Py MineSweeper
 A Python CLI remake of the classic Windows Minesweeper game.
 It’s an honest, beginner-friendly project created to inspire my daughter,
 her high-school friends, and other aspiring Python learners.
