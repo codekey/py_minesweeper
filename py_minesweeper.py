@@ -31,7 +31,7 @@ def lay_mines(l, w, m):
 # Generates random mines and assigns locations
     i, taken = 0, set()
     while i < m:
-        rnd = random.randint(1, l*w)
+        rnd = random.randint(0, l*w-1)
         if rnd in taken:
             continue
         else:
